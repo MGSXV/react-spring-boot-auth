@@ -1,20 +1,34 @@
 version: '3.8'
 services:
-  services:
-    auth-client-dev:
-      image: auth-client-dev-image
-      container_name: auth-client-dev-container
-      # stdin_open: true
-      # tty: true
-      build:
-        context: ./client
-      ports:
-        - "3000:3000"
-      volumes:
-        - ./client:/app
-      environment:
-      - CHOKIDAR_USEPOLLING=true # This is for Windows users
-      env_file:
-        - ./client/.env
-      # depends_on:
-      #   - auth-server-dev
+  auth-client-dev:
+    image: auth-client-dev-image
+    container_name: auth-client-dev-container
+    # stdin_open: true
+    # tty: true
+    build:
+      context: ./client
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./client/src:/app/src
+    environment:
+    - CHOKIDAR_USEPOLLING=true # This is for Windows users
+    env_file:
+      - ./client/.env
+    # depends_on:
+    #   - auth-server-dev
+  # auth-server-dev:
+  #   image: auth-server-dev-image
+  #   container_name: auth-server-dev-container
+  #   build:
+  #     context: ./server
+  #   ports:
+  #     - "3001:3001"
+  #   volumes:
+  #     - ./server:/app
+  #   environment:
+  #   - CHOKIDAR_USEPOLLING=true # This is for Windows users
+  #   env_file:
+  #     - ./server/.env
+  #   depends_on:
+  #     - auth-db-dev
