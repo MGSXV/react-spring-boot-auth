@@ -15,20 +15,44 @@ services:
     - CHOKIDAR_USEPOLLING=true # This is for Windows users
     env_file:
       - ./client/.env
-    # depends_on:
-    #   - auth-server-dev
-  # auth-server-dev:
-  #   image: auth-server-dev-image
-  #   container_name: auth-server-dev-container
+    depends_on:
+      - auth-server-dev
+    networks:
+      - client-side
+  auth-server-dev:
+    image: auth-server-dev-image
+    container_name: auth-server-dev-container
+    build:
+      context: ./server
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./server:/app
+    environment:
+    - CHOKIDAR_USEPOLLING=true # This is for Windows users
+    env_file:
+      - ./server/.env
+    networks:
+      - client-side
+      - server-side
+    depends_on:
+      - auth-db-dev
+  # auth-db-dev:
+  #   image: auth-db-dev-image
+  #   container_name: auth-db-dev-container
   #   build:
-  #     context: ./server
+  #     context: ./database
   #   ports:
-  #     - "3001:3001"
+  #     - "8002:8002"
   #   volumes:
-  #     - ./server:/app
+  #     - ./database:/app
   #   environment:
   #   - CHOKIDAR_USEPOLLING=true # This is for Windows users
   #   env_file:
-  #     - ./server/.env
-  #   depends_on:
-  #     - auth-db-dev
+  #     - ./database/.env
+  #   networks:
+  #     - server-side
+
+networks:
+  client-side: {}
+  server-side: {}
